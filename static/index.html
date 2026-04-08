@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Warehouse Admin</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<div class="app-shell">
+		<aside class="sidebar">
+			<div>
+				<p class="eyebrow">Sports Warehouse</p>
+				<h1>Admin Console</h1>
+				<p class="sidebar-copy">Live inventory pulled from the API and presented as a warehouse control panel.</p>
+			</div>
+
+			<div class="sidebar-panel">
+				<span class="panel-label">Data Source</span>
+				<strong>GET /inventory</strong>
+				<p>Connected on page load and rendered directly from SQLModel-backed JSON.</p>
+			</div>
+
+			<div class="sidebar-panel status-panel">
+				<span class="panel-label">Status</span>
+				<strong id="connection-status">Loading inventory...</strong>
+				<p id="last-updated">Waiting for first response.</p>
+			</div>
+		</aside>
+
+		<main class="main-panel">
+			<header class="hero">
+				<div>
+					<p class="eyebrow">Inventory Overview</p>
+					<h2>Products</h2>
+					<p class="hero-copy">A searchable inventory table with the current warehouse catalog, quantities, pricing, and storage locations.</p>
+				</div>
+
+				<div class="toolbar">
+					<label class="search-field" for="inventory-search">
+						<span>Search</span>
+						<input id="inventory-search" type="search" placeholder="Sport, category, SKU, or location">
+					</label>
+				</div>
+			</header>
+
+			<section class="stats-grid" aria-label="Inventory summary">
+				<article class="stat-card">
+					<span class="stat-label">Products</span>
+					<strong id="product-count">0</strong>
+				</article>
+				<article class="stat-card">
+					<span class="stat-label">Units In Stock</span>
+					<strong id="unit-count">0</strong>
+				</article>
+				<article class="stat-card">
+					<span class="stat-label">Sports</span>
+					<strong id="sport-count">0</strong>
+				</article>
+				<article class="stat-card accent-card">
+					<span class="stat-label">Inventory Value</span>
+					<strong id="inventory-value">$0.00</strong>
+				</article>
+			</section>
+
+			<section class="form-panel">
+				<div class="table-header">
+					<div>
+						<p class="table-title" id="form-title">Add Product</p>
+						<p class="table-subtitle" id="form-subtitle">Create a new warehouse record through the existing POST endpoint.</p>
+					</div>
+					<span class="record-pill" id="form-mode-pill">POST /inventory</span>
+				</div>
+
+				<form id="create-product-form" class="product-form">
+					<label class="field-group" for="sports-input">
+						<span>Sport</span>
+						<input id="sports-input" name="sports" type="text" required placeholder="Basketball">
+					</label>
+					<label class="field-group" for="category-input">
+						<span>Category</span>
+						<input id="category-input" name="category" type="text" required placeholder="Practice Balls">
+					</label>
+					<label class="field-group" for="quantity-input">
+						<span>Quantity</span>
+						<input id="quantity-input" name="quantity" type="number" min="0" step="1" required placeholder="25">
+					</label>
+					<label class="field-group" for="price-input">
+						<span>Unit Price</span>
+						<input id="price-input" name="unit_price" type="number" min="0" step="0.01" required placeholder="21.99">
+					</label>
+					<label class="field-group" for="sku-input">
+						<span>SKU</span>
+						<input id="sku-input" name="sku" type="text" required placeholder="BBALL-003">
+					</label>
+					<label class="field-group" for="location-input">
+						<span>Location</span>
+						<input id="location-input" name="storage_location" type="text" placeholder="A1-S3">
+					</label>
+					<div class="form-actions">
+						<button id="create-submit" class="create-button" type="submit">Add Product</button>
+						<button id="cancel-edit" class="secondary-button" type="button" hidden>Cancel Edit</button>
+					</div>
+				</form>
+			</section>
+
+			<section class="table-panel">
+				<div class="table-header">
+					<div>
+						<p class="table-title">Inventory Table</p>
+						<p class="table-subtitle">Current products returned by the backend endpoint.</p>
+					</div>
+					<span class="record-pill" id="record-pill">0 records</span>
+				</div>
+
+				<div id="feedback" class="feedback" role="status">Loading inventory from the API...</div>
+
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Sport</th>
+								<th>Category</th>
+								<th>Quantity</th>
+								<th>Unit Price</th>
+								<th>SKU</th>
+								<th>Location</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody id="inventory-body"></tbody>
+					</table>
+				</div>
+			</section>
+		</main>
+	</div>
+
+	<script src="script.js"></script>
+</body>
+</html>
